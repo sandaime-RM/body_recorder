@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import "bootstrap-icons/font/bootstrap-icons.css"; //アイコン
+
+//各ページの読み込み
+import Header from './screens/Header';
+import Footer from './screens/Footer';
+import Home from './screens/Home';
+import Record from './screens/Record';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='bg-slate-50'>
+      <BrowserRouter>
+        <Header />
+
+        <div className='container mx-auto py-4 my-3'>
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="record/" element={<Record />}/>
+
+          </Routes>
+        </div>
+
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 }
