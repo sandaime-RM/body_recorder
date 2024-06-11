@@ -1,10 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import WeightGraph from './WeightGraph'
 import SpeedMenuButton from './SpeedMenuButton'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth, db } from '..'
+import { doc, getDoc } from "firebase/firestore"
 
 const Home = () => {
 
-    const [weights, setWeights] = useState([["5/12", "5/13", "5/14", "5/15", "5/16", "5/17", "5/18"], [79.6, 79.4, 79.2, 78.7, 78.8, 78.4, 78.6]]);
+    const [weights, setWeights] = useState([[], []]);
+
+    const [userData, setUser] = useState({photoURL: "../imgs/person.png"});
+
+    //ユーザー情報の取得
+    useEffect(() => {
+      onAuthStateChanged(auth, async (user) => {
+          if (user) {
+              const uid = user.uid;
+              setUser(user);
+              
+              let weightsData = [[], []];
+
+              const snap = await getDoc(doc(db, "users", uid));
+              
+              if(snap.data().weight) {
+                snap.data().weight.forEach((data, index) => {
+                    const date = new Date(data.date * 1000)
+                    console.log(date.getMonth())
+                    weightsData[0][index] = (date.getMonth() + 1) + "/" + date.getDate();
+                    weightsData[1][index] = data.weight;
+                });
+
+                setWeights(weightsData)
+              }
+          } else {
+              // User is signed out
+              // ...
+          }
+      });
+    }, userData)
 
     //体重データの追加
     const setNewWeight = () => {
@@ -36,8 +69,8 @@ const Home = () => {
             
             <div className='grid md:grid-cols-3 mx-4'>
                 <SpeedMenuButton text="体重を記録" icon="speedometer2" type={1} setData={setNewWeight}/>
-                <SpeedMenuButton text="体温を記録" icon="thermometer-half" type={2}/>
-                <SpeedMenuButton text="身長を記録" icon="rulers" type={3}/>
+                {/* <SpeedMenuButton text="体温を記録" icon="thermometer-half" type={2}/>
+                <SpeedMenuButton text="身長を記録" icon="rulers" type={3}/> */}
             </div>
         </div>
     </div>

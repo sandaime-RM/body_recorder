@@ -7,6 +7,7 @@ import Header from './screens/Header';
 import Footer from './screens/Footer';
 import Home from './screens/Home';
 import Record from './screens/Record';
+import Account from './screens/Account';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="record/" element={<Record />}/>
+            <Route path="account/" element={<Account />}/>
 
           </Routes>
         </div>
